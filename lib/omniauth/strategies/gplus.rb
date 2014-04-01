@@ -62,7 +62,7 @@ module OmniAuth
       end
 
       def format_scopes(scopes)
-        scopes.split(/,\s*/).map(&method(:format_scope)).join(" ")
+        scopes.split(/,\s*/).map{|scope| ['profile','email','openid'].find {|s| s == scope}|| format_scope(scope)}.join(" ")
       end
 
       def format_scope(scope)
