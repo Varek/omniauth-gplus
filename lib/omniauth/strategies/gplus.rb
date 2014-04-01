@@ -2,14 +2,14 @@ module OmniAuth
   module Strategies
     class GPlus < OAuth2
       option :client_options, {
-        site: 'https://www.googleapis.com/oauth2/v1',
+        site: 'https://www.googleapis.com/plus/v1',
         authorize_url: 'https://www.google.com/accounts/o8/oauth2/authorization',
         token_url: 'https://www.google.com/accounts/o8/oauth2/token'
       }
 
       option :authorize_options, [:scope, :request_visible_actions]
 
-      option :scope, 'userinfo.email'
+      option :scope, 'email'
 
       option :request_visible_actions, nil
 
@@ -21,20 +21,19 @@ module OmniAuth
 
       info do
         {
-          'email' => raw_info['email'],
-          'name' => raw_info['name'],
-          'first_name' => raw_info['given_name'],
-          'last_name' => raw_info['family_name'],
-          'image' => raw_info['picture'],
+          'email' => raw_info['emails'].first['value'],
+          'name' => raw_info['displayName'],
+          'first_name' => raw_info['name']['givenName'],
+          'last_name' => raw_info['name']['familyName'],
+          'image' => raw_info['image']['url'],
           'urls' => {
-            "Google+" => raw_info['link']
+            "Google+" => raw_info['url']
           }
         }
       end
 
       extra do
         {
-          'locale' => raw_info['locale'],
           'gender' => raw_info['gender'],
           'birthday' => raw_info['birthday'],
           'raw_info' => raw_info
@@ -46,7 +45,7 @@ module OmniAuth
           params['scope'] = format_scopes(params['scope'])
           if (params['request_visible_actions'])
             params['request_visible_actions'] = format_actions(params['request_visible_actions'])
-          end 
+          end
           custom_parameters(params)
         end
       end
@@ -84,7 +83,7 @@ module OmniAuth
 
       def raw_info
         access_token.options[:mode] = :query
-        @raw_info ||= access_token.get('userinfo').parsed
+        @raw_info ||= access_token.get('people/me').parsed
       end
     end
   end
