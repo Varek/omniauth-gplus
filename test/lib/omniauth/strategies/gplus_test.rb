@@ -13,7 +13,7 @@ class TestOmniAuthGPlus < MiniTest::Unit::TestCase
   end
 
   def test_site_is_valid
-    expected = 'https://www.googleapis.com/oauth2/v1'
+    expected = 'https://www.googleapis.com/plus/v1'
     actual = strategy.client.site
     assert_equal(expected, actual)
   end
@@ -31,7 +31,7 @@ class TestOmniAuthGPlus < MiniTest::Unit::TestCase
   end
 
   def test_default_scope_is_email
-    expected = 'userinfo.email'
+    expected = 'email'
     actual = strategy.options['scope']
     assert_equal(expected, actual)
   end
